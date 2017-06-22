@@ -1,27 +1,28 @@
 """Run this file to get appointments for the Acuity user and dates listed in local.py"""
-import logging
+import logging, datetime
 
 import acuity
 import helpers
 import local
+import google_api
 
 logging.basicConfig(filename='acuity_calendar.log',
-                    level=logging.DEBUG)
+                    level=local.LOG_LEVEL)
 
 appointments = helpers.calculate_effective_times(
-    acuity.get_appointments(
-        start_date=local.START_DATE,
-        end_date=local.END_DATE,
-    ),
+    helpers.get_all_acuity_appts(),
     acuity.get_appointment_types()
 )
+logging.info("{} appointments found in acuity".format(len(appointments)))
 
-if local.OUTPUT_FILE is not None:
-    try:
-        output_file = open(local.OUTPUT_FILE, 'wt')
-    except(IOError):
-        logging.error('Unable to open output file. Please check permissions.')
-    print(helpers.print_busy_times(appointments), file=output_file)
-    output_file.close()
-else:
-    print(helpers.print_busy_times(appointments))
+earliest, latest = helpers.find_bookend_dates(appointments)
+
+calendar_service = google_api.get_calendar_service()
+calendar_id = local.CALENDAR_ID
+
+event_list = google_api.get_event_list(calendar_service, start_date=earliest, end_date=latest)
+
+event_list = helpers.remove_cancelled_appointments(appointments, event_list)
+
+for appointment in appointments:
+    helpers.check_for_and_create_event(appointment, calendar_service, calendar_id, event_list=event_list)

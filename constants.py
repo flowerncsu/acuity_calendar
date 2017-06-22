@@ -1,3 +1,3 @@
 """System-wide constants"""
-DEFAULT_TIME_SPAN = 7
+DEFAULT_TIME_SPAN = 14
 MAX_RESULTS_PER_REQUEST = 100

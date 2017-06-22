@@ -8,10 +8,21 @@ import constants
 import local
 
 logging.basicConfig(filename='acuity_calendar.log',
-                    level=logging.DEBUG)
+                    level=local.LOG_LEVEL)
 
 
 def get_appointments(start_date=None, end_date=None):
+    """
+    For the given time range (or current date plus default duration if not provided), get all scheduled appointments.
+    Return a list of appointments, with each appointment represented by a dict:
+    {
+        'appt_time': start time as string
+        'date': date as string (format: 'June 17, 2017')
+        'appt_id': id for appt according to Acuity
+        'type_id': id for appt type according to Acuity (see get_appointment_types for more info)
+        'duration': length of appointment in minutes, as string (does not include padding)
+    }
+    """
     if start_date is None:
         # Set start date to current date if not provided
         start_date = datetime.datetime.now().date()
