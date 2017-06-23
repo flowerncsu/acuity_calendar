@@ -26,7 +26,7 @@ logging.basicConfig(filename='acuity_calendar.log',
 GOOGLE_TIMESTAMP_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
 # If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/calendar-python-quickstart.json
+# at ~/.credentials/acuity-integration-with-google.json'
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Acuity Calendar'
@@ -127,7 +127,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'calendar-python-quickstart.json')
+                                   'acuity-integration-with-google.json')
 
     store = Storage(credential_path)
     credentials = store.get()
