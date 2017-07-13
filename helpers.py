@@ -188,3 +188,10 @@ def check_for_and_create_event(appointment, calendar_service, calendar_id='prima
             calendar_service,
             calendar_id
         )
+
+
+def delete_all_google_appts(calendar_service, start_date, end_date, calendar_id='primary'):
+    # Intended for cleanup during testing/debugging
+    event_list = google_api.get_event_list(calendar_service, start_date=start_date, end_date=end_date)
+    for event in event_list:
+        google_api.delete_event(event, calendar_service, calendar_id=calendar_id)
