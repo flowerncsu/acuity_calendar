@@ -197,4 +197,4 @@ def delete_all_google_appts(calendar_service, start_date, end_date, calendar_id=
     for event in event_list:
         google_api.delete_event(event, calendar_service, calendar_id=calendar_id)
         # Avoid google's rate limit
-        time.sleep(0.004)
+        time.sleep(0.04)
