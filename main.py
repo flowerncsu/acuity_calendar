@@ -20,7 +20,7 @@ earliest, latest = helpers.find_bookend_dates(appointments)
 calendar_service = google_api.get_calendar_service()
 calendar_id = local.CALENDAR_ID
 
-event_list = google_api.get_event_list(calendar_service, start_date=earliest, end_date=latest)
+event_list = google_api.get_event_list(calendar_service, start_date=earliest, end_date=latest, calendar_id=calendar_id)
 
 event_list = helpers.remove_cancelled_appointments(appointments, event_list)
 
