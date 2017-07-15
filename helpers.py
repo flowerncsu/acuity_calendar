@@ -32,7 +32,7 @@ def events_match(acuity_event, google_event):
                 acuity_event['start_time'] == datetime_from_google_time(google_event['start']['dateTime']) and
                 acuity_event['end_time'] == datetime_from_google_time(google_event['end']['dateTime']))
     else:
-        logging.debug('No appt_id in acuity event: ' + acuity_event)
+        logging.debug('No appt_id in acuity event: ' + str(acuity_event))
         return False
 
 
