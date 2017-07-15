@@ -12,14 +12,14 @@ logging.basicConfig(filename='acuity_calendar.log',
                     level=local.LOG_LEVEL)
 
 
-def remove_cancelled_appointments(acuity_list, google_list):
+def remove_cancelled_appointments(acuity_list, google_list, calendar_service):
     deleted = 0
     for google_appt in google_list:
         for acuity_appt in acuity_list:
             if events_match(google_appt, acuity_appt):
                 break
         else:
-            google_api.delete_event(google_appt)
+            google_api.delete_event(google_appt, calendar_service)
             google_list.pop(google_appt)
             deleted += 1
     logging.info("Deleted {} cancelled appts from google calendar".format(deleted))

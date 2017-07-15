@@ -22,7 +22,7 @@ calendar_id = local.CALENDAR_ID
 
 event_list = google_api.get_event_list(calendar_service, start_date=earliest, end_date=latest, calendar_id=calendar_id)
 
-event_list = helpers.remove_cancelled_appointments(appointments, event_list)
+event_list = helpers.remove_cancelled_appointments(appointments, event_list, calendar_service)
 
 for appointment in appointments:
     helpers.check_for_and_create_event(appointment, calendar_service, calendar_id, event_list=event_list)
