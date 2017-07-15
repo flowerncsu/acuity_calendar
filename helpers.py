@@ -27,9 +27,13 @@ def remove_cancelled_appointments(acuity_list, google_list):
 
 
 def events_match(acuity_event, google_event):
-    return (str(acuity_event['appt_id']) == google_event['description'] and
-            acuity_event['start_time'] == datetime_from_google_time(google_event['start']['dateTime']) and
-            acuity_event['end_time'] == datetime_from_google_time(google_event['end']['dateTime']))
+    if 'appt_id' in acuity_event:
+        return (str(acuity_event['appt_id']) == google_event['description'] and
+                acuity_event['start_time'] == datetime_from_google_time(google_event['start']['dateTime']) and
+                acuity_event['end_time'] == datetime_from_google_time(google_event['end']['dateTime']))
+    else:
+        logging.debug('No appt_id in acuity event: ' + acuity_event)
+        return False
 
 
 def find_bookend_dates(appointments):
