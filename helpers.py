@@ -20,7 +20,7 @@ def remove_cancelled_appointments(acuity_list, google_list, calendar_service):
                 break
         else:
             google_api.delete_event(google_appt, calendar_service)
-            del google_list[google_appt]
+            google_list.remove(google_appt)
             deleted += 1
     logging.info("Deleted {} cancelled appts from google calendar".format(deleted))
     return google_list
