@@ -49,7 +49,10 @@ def post_event_to_google(start_time, end_time, timezone, summary, description, c
 
 
 def delete_event(event, calendar_service, calendar_id='primary'):
-    calendar_service.events().delete(eventId=event['id'], calendarId=calendar_id).execute()
+    try:
+        calendar_service.events().delete(eventId=event['id'], calendarId=calendar_id).execute()
+    except HttpError as error:
+        logging.warning(str(error) + ' while attempting to delete event with id ' + event['id'])
 
 
 def update_time_of_event(event, new_start_time, new_end_time, calendar_service, calendar_id='primary'):
