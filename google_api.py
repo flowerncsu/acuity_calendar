@@ -2,6 +2,7 @@
 import datetime
 import os
 import logging
+import time
 
 import httplib2
 from apiclient import discovery
@@ -46,6 +47,8 @@ def post_event_to_google(start_time, end_time, timezone, summary, description, c
         'description': description
     }
     calendar_service.events().insert(calendarId=calendar_id, body=event).execute()
+    # Avoid google's rate limit
+    time.sleep(0.04)
 
 
 def delete_event(event, calendar_service, calendar_id='primary'):
@@ -53,6 +56,8 @@ def delete_event(event, calendar_service, calendar_id='primary'):
         calendar_service.events().delete(eventId=event['id'], calendarId=calendar_id).execute()
     except HttpError as error:
         logging.warning(str(error) + ' while attempting to delete event with id ' + event['id'])
+    # Avoid google's rate limit
+    time.sleep(0.04)
 
 
 def update_time_of_event(event, new_start_time, new_end_time, calendar_service, calendar_id='primary'):
@@ -79,9 +84,13 @@ def update_time_of_event(event, new_start_time, new_end_time, calendar_service, 
             'description': event['description']
         }
     ).execute()
+    # Avoid google's rate limit
+    time.sleep(0.04)
 
 
 def get_event_list(calendar_service, calendar_id='primary', start_date=None, end_date=None):
+    # Avoid google's rate limit
+    time.sleep(0.04)
     if start_date is None:
         # Set start date to current date if not provided
         start_date = datetime.datetime.now()
@@ -113,6 +122,8 @@ def get_event_list(calendar_service, calendar_id='primary', start_date=None, end
 
 
 def get_calendar_list(calendar_service):
+    # Avoid google's rate limit
+    time.sleep(0.04)
     return calendar_service.calendarList().list().execute()
 
 
