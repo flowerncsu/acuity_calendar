@@ -1,6 +1,7 @@
 """This module contains shortcut and utility functions"""
 import datetime
 import logging
+import json
 
 import local
 import google_api
@@ -9,6 +10,14 @@ import acuity
 
 logging.basicConfig(filename='acuity_calendar.log',
                     level=local.LOG_LEVEL)
+
+def format_appointments_for_json(appointment_list):
+    return [
+        {'title': appointment['type_name'],
+         'start': appointment['start_time'].isoformat(),
+         'end': appointment['end_time'].isoformat(),
+         'allDay': False} for appointment in appointment_list
+    ]
 
 
 def remove_cancelled_appointments(acuity_list, google_list, calendar_service):
