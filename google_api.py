@@ -48,7 +48,7 @@ def post_event_to_google(start_time, end_time, timezone, summary, description, c
     }
     calendar_service.events().insert(calendarId=calendar_id, body=event).execute()
     # Avoid google's rate limit
-    time.sleep(0.04)
+    time.sleep(0.25)
 
 
 def delete_event(event, calendar_service, calendar_id='primary'):
@@ -57,7 +57,7 @@ def delete_event(event, calendar_service, calendar_id='primary'):
     except HttpError as error:
         logging.warning(str(error) + ' while attempting to delete event with id ' + event['id'])
     # Avoid google's rate limit
-    time.sleep(0.04)
+    time.sleep(0.25)
 
 
 def update_time_of_event(event, new_start_time, new_end_time, calendar_service, calendar_id='primary'):
@@ -85,12 +85,12 @@ def update_time_of_event(event, new_start_time, new_end_time, calendar_service, 
         }
     ).execute()
     # Avoid google's rate limit
-    time.sleep(0.04)
+    time.sleep(0.25)
 
 
 def get_event_list(calendar_service, calendar_id='primary', start_date=None, end_date=None):
     # Avoid google's rate limit
-    time.sleep(0.04)
+    time.sleep(0.25)
     if start_date is None:
         # Set start date to current date if not provided
         start_date = datetime.datetime.now()
@@ -107,11 +107,9 @@ def get_event_list(calendar_service, calendar_id='primary', start_date=None, end
         ).execute()
 
     except HttpError as error:
-        # Google has this crazy idea that if there are no events in the time range you request, you should
-        # get a 400 error. Similarly unhelpfully, it will give you no more detail than the fact that it is a
-        # 400 error. So catch any 400 error and just return an empty list.
+        # Often due to submitting dates as date-only rather than full datetimes.
         if error.args[0]['status'] == '400':
-            logging.error("Response from google was 400 when requesting event list; likely due to empty calendar.")
+            logging.error("Response from google was 400 when requesting event list; check inputs.")
             return []
         else:
             raise error
@@ -123,7 +121,7 @@ def get_event_list(calendar_service, calendar_id='primary', start_date=None, end
 
 def get_calendar_list(calendar_service):
     # Avoid google's rate limit
-    time.sleep(0.04)
+    time.sleep(0.25)
     return calendar_service.calendarList().list().execute()
 
 
@@ -145,6 +143,7 @@ def get_credentials():
 
     store = Storage(credential_path)
     credentials = store.get()
+    print('Credentials invalid?', credentials.invalid)
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
@@ -160,6 +159,7 @@ def get_calendar_service():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     return discovery.build('calendar', 'v3', http=http)
+
 
 def main():
     """Shows basic usage of the Google Calendar API.

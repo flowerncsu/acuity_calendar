@@ -11,6 +11,7 @@ import acuity
 logging.basicConfig(filename='acuity_calendar.log',
                     level=local.LOG_LEVEL)
 
+
 def format_appointments_for_json(appointment_list):
     return [
         {'title': appointment['type_name'],
@@ -203,7 +204,7 @@ def check_for_and_create_event(appointment, calendar_service, calendar_id='prima
         )
 
 
-def delete_all_google_appts(calendar_service, start_date, end_date, calendar_id='primary'):
+def delete_all_google_appts(calendar_service, start_date, end_date, calendar_id):
     # Intended for cleanup during testing/debugging
     event_list = google_api.get_event_list(calendar_service, start_date=start_date, end_date=end_date, calendar_id=calendar_id)
     for event in event_list:
