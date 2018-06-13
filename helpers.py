@@ -92,7 +92,8 @@ def calculate_effective_times(appointments, appointment_types):
                 appointment['start_time'] = datetime.datetime.combine(
                     appointment['date'], appointment['appt_time']
                 ) - datetime.timedelta(minutes=int(appointment['paddingBefore']))
-                appointment['effective_duration'] = int(appointment['duration']) + int(appointment['paddingAfter'])
+                appointment['effective_duration'] = \
+                    int(appointment['duration']) + int(appointment['paddingAfter']) + int(appointment['paddingBefore'])
                 appointment['end_time'] = appointment['start_time'] + datetime.timedelta(
                     minutes=appointment['effective_duration'])
                 appointments_with_types.append(appointment)
